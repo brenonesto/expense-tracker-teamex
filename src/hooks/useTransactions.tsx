@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   type Transaction,
   TransactionCategory,
@@ -247,8 +247,10 @@ export default function useTransactions(filters?: TransactionFilters) {
 
   const filteredTransactions = applyFilters(transactions);
 
-  const sortedTransactions = filteredTransactions.sort(
-    (a, b) => b.date.getTime() - a.date.getTime()
+  const sortedTransactions = useMemo(
+    () =>
+      filteredTransactions.sort((a, b) => b.date.getTime() - a.date.getTime()),
+    [filteredTransactions]
   );
 
   const totalPages = Math.ceil(sortedTransactions.length / ITEMS_PER_PAGE);
