@@ -61,7 +61,7 @@ export default function TransactionDialog({
     if (isEditMode) {
       updateTransaction?.({
         id: transaction?.id,
-        date: new Date(date),
+        date,
         amount,
         type,
         category,
@@ -69,7 +69,7 @@ export default function TransactionDialog({
     } else {
       addTransaction?.({
         id: generateTransactionId(),
-        date: new Date(date),
+        date,
         amount,
         type,
         category,
@@ -100,8 +100,22 @@ export default function TransactionDialog({
               <Input
                 type="date"
                 id={dateId}
-                value={date?.toISOString().split("T")[0]}
-                onChange={(e) => setDate(new Date(e.target.value))}
+                value={
+                  date
+                    ? `${date.getFullYear()}-${String(
+                        date.getMonth() + 1
+                      ).padStart(2, "0")}-${String(date.getDate()).padStart(
+                        2,
+                        "0"
+                      )}`
+                    : ""
+                }
+                onChange={(e) => {
+                  const [year, month, day] = e.target.value
+                    .split("-")
+                    .map(Number);
+                  setDate(new Date(year, month - 1, day));
+                }}
               />
             </div>
             <div className="w-full">
